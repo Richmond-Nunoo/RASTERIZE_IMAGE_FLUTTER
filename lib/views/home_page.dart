@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image/image.dart' as imglib;
+import 'package:path_provider/path_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -94,7 +97,21 @@ class _HomePageState extends State<HomePage> {
               height: 10,
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () async {
+                const imageUrl = 'assets/images/woman.jpg';
+                final appDir = await getApplicationDocumentsDirectory();
+                final file = File('${appDir.path}/womanjpg');
+
+                // Read the image file from assets
+                final imageAsset = await rootBundle.load(imageUrl);
+                final imageData = imageAsset.buffer.asUint8List();
+
+                // Write the image file to the device storage
+                await file.writeAsBytes(imageData);
+
+                // Show a message or perform further actions after successful download
+                print('Image downloaded successfully!');
+              },
               child: const Text("Download"),
             )
           ],
