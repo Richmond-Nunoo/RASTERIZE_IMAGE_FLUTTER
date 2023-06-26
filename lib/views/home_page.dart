@@ -97,21 +97,7 @@ class _HomePageState extends State<HomePage> {
               height: 10,
             ),
             ElevatedButton(
-              onPressed: () async {
-                const imageUrl = 'assets/images/woman.jpg';
-                final appDir = await getApplicationDocumentsDirectory();
-                final file = File('${appDir.path}/womanjpg');
-
-                // Read the image file from assets
-                final imageAsset = await rootBundle.load(imageUrl);
-                final imageData = imageAsset.buffer.asUint8List();
-
-                // Write the image file to the device storage
-                await file.writeAsBytes(imageData);
-
-                // Show a message or perform further actions after successful download
-                print('Image downloaded successfully!');
-              },
+              onPressed: () async {},
               child: const Text("Download"),
             )
           ],
