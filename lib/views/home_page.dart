@@ -181,7 +181,7 @@ class _HomePageState extends State<HomePage> {
                       icon: const Icon(
                         CupertinoIcons.share,
                       ),
-                    )
+                    ),
                   ],
                 )
               ],
