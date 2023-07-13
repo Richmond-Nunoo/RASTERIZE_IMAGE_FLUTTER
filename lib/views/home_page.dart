@@ -149,27 +149,33 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    ElevatedButton(
+                    ElevatedButton.icon(
                       onPressed: () async {
                         final image = await screenshotController
                             .captureFromWidget(rasterizedImageMethod());
                         await saveImage(image);
                       },
-                      child: const Text(
-                        "Download",
+                      icon: const Icon(
+                        CupertinoIcons.cloud_download,
+                      ),
+                      label: const Text(
+                        "Save",
                       ),
                     ),
                     const SizedBox(
                       width: 10,
                     ),
-                    ElevatedButton(
+                    ElevatedButton.icon(
                       onPressed: () async {
                         final image = await screenshotController
                             .captureFromWidget(rasterizedImageMethod());
                         saveAndShare(image);
                       },
-                      child: const Text(
+                      label: const Text(
                         "share",
+                      ),
+                      icon: const Icon(
+                        CupertinoIcons.share,
                       ),
                     )
                   ],
@@ -182,10 +188,13 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  SizedBox rasterizedImageMethod() {
-    return SizedBox(
+  Container rasterizedImageMethod() {
+    return Container(
       height: 220,
       width: 220,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           var width = constraints.maxWidth;
