@@ -11,7 +11,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-//  final Color fgColor = Colors.black;
 
   final Color bgColor = Colors.grey.shade200;
 
