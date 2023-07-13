@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image/image.dart' as imglib;
-
+import 'package:resterizeimage/views/physic.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
                   tileSize = width / tilesY;
                   return GestureDetector(
                     onPanUpdate: (details) {
-                      print(width);
+                  
                     },
                     child: CustomPaint(
                       painter: ImagePainter(
@@ -94,9 +94,32 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(
               height: 10,
             ),
-            ElevatedButton(
-              onPressed: () async {},
-              child: const Text("Download"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MyCustomWidget(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    "Bounce",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () async {},
+                  child: const Text(
+                    "Download",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+              ],
             )
           ],
         ),
