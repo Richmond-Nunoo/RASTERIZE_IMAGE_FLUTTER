@@ -42,6 +42,7 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
+            heroTag: "1",
             onPressed: () {},
             child: const Icon(Icons.remove),
           ),
@@ -49,6 +50,7 @@ class _HomePageState extends State<HomePage> {
             width: 10,
           ),
           FloatingActionButton(
+                  heroTag: "2",
             onPressed: () {},
             child: const Icon(Icons.add),
           ),

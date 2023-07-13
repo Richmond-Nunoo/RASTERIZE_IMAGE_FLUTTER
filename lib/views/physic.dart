@@ -12,41 +12,58 @@ class MyCustomWidgetState extends State<MyCustomWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Test App"),
-        centerTitle: true,
-      ),
-      body: DraggableCard(
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.fastLinearToSlowEaseIn,
-          height: 150,
-          width: 150,
-          decoration: BoxDecoration(
-            color: const Color(0xff8639FB),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(5),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xff8639FB).withOpacity(0.7),
-                blurRadius: 30,
+        backgroundColor: Colors.grey.shade500,
+        appBar: AppBar(
+          title: const Text("Test App"),
+          centerTitle: true,
+          elevation: 0,
+        ),
+        body: Align(
+          alignment: Alignment.bottomCenter,
+          child: Row(
+            children: [
+              DraggableCard(
+                  child: Container(
+                height: 150,
+                width: 80,
+                color: Colors.green,
+                child: const Center(
+                  child: Text("Card 0"),
+                ),
+              )),
+              const DraggableCard(
+                child: SizedBox(
+                  height: 150,
+                  width: 80,
+                  child: Card(
+                    color: Colors.blue,
+                    child: Center(child: Text("Card 1")),
+                  ),
+                ),
               ),
+              const DraggableCard(
+                child: SizedBox(
+                  height: 150,
+                  width: 80,
+                  child: Card(
+                    color: Colors.blue,
+                    child: Center(child: Text("Card 1")),
+                  ),
+                ),
+              ),
+              const DraggableCard(
+                child: SizedBox(
+                  height: 150,
+                  width: 80,
+                  child: Card(
+                    color: Colors.blue,
+                    child: Center(child: Text("Card 1")),
+                  ),
+                ),
+              )
             ],
           ),
-          child: const Center(
-            child: Text(
-              'Physics',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-                fontSize: 25,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+        ));
   }
 }
 
@@ -63,7 +80,7 @@ class DraggableCardState extends State<DraggableCard>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
-  var _dragAlignment = Alignment.center;
+  var _dragAlignment = Alignment.bottomCenter;
 
   late Animation<Alignment> _animation;
 
