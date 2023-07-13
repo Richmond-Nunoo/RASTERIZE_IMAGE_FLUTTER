@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> loadImage() async {
-    final bytes = await rootBundle.load('assets/images/woman.jpg');
+    final bytes = await rootBundle.load('assets/images/man.jpg');
     final Uint8List imageBytes = bytes.buffer.asUint8List();
     final img = imglib.decodeImage(imageBytes);
     final resizedImage = imglib.copyResize(img!, width: 220, height: 220);
@@ -52,12 +52,12 @@ class _HomePageState extends State<HomePage> {
           FloatingActionButton(
             heroTag: "1",
             onPressed: () {
-              if (rasterizeValue > 5) {
+              if (rasterizeValue > 1) {
                 setState(() {
                   rasterizeValue--;
                 });
               } else {
-                print("You Cant go below 5");
+                print("You Cant go below 1");
               }
             },
             child: const Icon(Icons.remove),
@@ -68,9 +68,13 @@ class _HomePageState extends State<HomePage> {
           FloatingActionButton(
             heroTag: "2",
             onPressed: () {
-              setState(() {
-                rasterizeValue++;
-              });
+              if (rasterizeValue < 35) {
+                setState(() {
+                  rasterizeValue++;
+                });
+              } else {
+                print("Thats Enough");
+              }
             },
             child: const Icon(Icons.add),
           ),
@@ -88,15 +92,15 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 const SizedBox(
-                  height: 10,
+                  height: 30,
                 ),
                 GestureDetector(
                   onTap: () {
                     print("Pick An Image");
                   },
                   child: Container(
-                    height: 200,
-                    width: 200,
+                    height: 150,
+                    width: 150,
                     decoration: DottedDecoration(
                         shape: Shape.box,
                         dash: const [10, 10],
@@ -190,27 +194,20 @@ class _HomePageState extends State<HomePage> {
 
   Container rasterizedImageMethod() {
     return Container(
-      height: 220,
-      width: 220,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
+        color: Colors.blue,
       ),
-      child: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          var width = constraints.maxWidth;
-          var height = constraints.maxHeight;
-          var ratio = height / width;
-          var tilesX = rasterizeValue;
-          var tilesY = ratio * tilesX;
-          tileSize = width / tilesY;
-          return CustomPaint(
-            painter: ImagePainter(
-              fgColor: bgColor,
-              tileSize: tileSize,
-              image: image,
-            ),
-          );
-        },
+      child: SizedBox(
+        height: 220,
+        width: 220,
+        child: CustomPaint(
+          painter: ImagePainter(
+            fgColor: bgColor,
+            tileSize: rasterizeValue,
+            image: image,
+          ),
+        ),
       ),
     );
   }
@@ -226,15 +223,17 @@ class _HomePageState extends State<HomePage> {
     final results = await ImageGallerySaver.saveImage(image, name: name);
     return results["filePath"];
   }
-
-  // void saveAndShare(Uint8List image) {}
 }
 
 void saveAndShare(Uint8List bytes) async {
-  final directory = await getApplicationDocumentsDirectory();
-  final image = File("${directory.path}/screenshot.jpg");
-  image.writeAsBytes(bytes);
-  await Share.shareXFiles([XFile(image.path)]);
+  try {
+    final directory = await getApplicationDocumentsDirectory();
+    final image = File("${directory.path}/screenshot.jpg");
+    await image.writeAsBytes(bytes);
+    await Share.shareXFiles([XFile(image.path)]);
+  } catch (e) {
+    print(e.toString());
+  }
 }
 
 class ImagePainter extends CustomPainter {
