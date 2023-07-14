@@ -41,6 +41,9 @@ dependencies:
   dotted_decoration: ^2.0.0
   image_picker: ^1.0.1
   screenshot: ^2.1.0
+  image_gallery_saver: ^2.0.3
+  permission_handler: ^10.4.3
+  share_plus: ^7.0.2
 
 dev_dependencies:
   flutter_test:

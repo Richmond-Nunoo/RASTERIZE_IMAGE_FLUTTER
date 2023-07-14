@@ -1,8 +1,15 @@
+import 'dart:io';
+
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image/image.dart' as imglib;
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -35,6 +42,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  ScreenshotController screenshotController = ScreenshotController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,37 +141,38 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(
                   height: 10,
                 ),
-                SizedBox(
-                  height: 220,
-                  width: 220,
-                  child: LayoutBuilder(
-                    builder:
-                        (BuildContext context, BoxConstraints constraints) {
-                      var width = constraints.maxWidth;
-                      var height = constraints.maxHeight;
-                      var ratio = height / width;
-                      var tilesX = rasterizeValue;
-                      var tilesY = ratio * tilesX;
-                      tileSize = width / tilesY;
-                      return CustomPaint(
-                        painter: ImagePainter(
-                          fgColor: bgColor,
-                          tileSize: tileSize,
-                          image: image,
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                rasterizedImageMethod(),
                 const SizedBox(
                   height: 20,
                 ),
-                ElevatedButton(
-                  onPressed: () async {},
-                  child: const Text(
-                    "Download",
-                
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        final image = await screenshotController
+                            .captureFromWidget(rasterizedImageMethod());
+                        await saveImage(image);
+                      },
+                      child: const Text(
+                        "Download",
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        final image = await screenshotController
+                            .captureFromWidget(rasterizedImageMethod());
+                        saveAndShare(image);
+                      },
+                      child: const Text(
+                        "share",
+                      ),
+                    )
+                  ],
                 )
               ],
             ),
@@ -172,6 +181,51 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  SizedBox rasterizedImageMethod() {
+    return SizedBox(
+      height: 220,
+      width: 220,
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          var width = constraints.maxWidth;
+          var height = constraints.maxHeight;
+          var ratio = height / width;
+          var tilesX = rasterizeValue;
+          var tilesY = ratio * tilesX;
+          tileSize = width / tilesY;
+          return CustomPaint(
+            painter: ImagePainter(
+              fgColor: bgColor,
+              tileSize: tileSize,
+              image: image,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  saveImage(Uint8List image) async {
+    await [Permission.storage].request();
+
+    final time = DateTime.now()
+        .toIso8601String()
+        .replaceAll('.', '_')
+        .replaceAll('.', "_");
+    final String name = "Sreenshot_$time";
+    final results = await ImageGallerySaver.saveImage(image, name: name);
+    return results["filePath"];
+  }
+
+  // void saveAndShare(Uint8List image) {}
+}
+
+void saveAndShare(Uint8List bytes) async {
+  final directory = await getApplicationDocumentsDirectory();
+  final image = File("${directory.path}/screenshot.jpg");
+  image.writeAsBytes(bytes);
+  await Share.shareXFiles([XFile(image.path)]);
 }
 
 class ImagePainter extends CustomPainter {
