@@ -17,7 +17,6 @@ class _HomePageState extends State<HomePage> {
 
   double tileSize = 0;
   double rasterizeValue = 15.0;
-  bool isButtonPressed = false;
 
   @override
   void initState() {
@@ -60,22 +59,11 @@ class _HomePageState extends State<HomePage> {
           ),
           FloatingActionButton(
             heroTag: "2",
-            onPressed: isButtonPressed
-                ? null
-                : () {
-                    setState(() {
-                      isButtonPressed = true;
-                      rasterizeValue++;
-                    });
-
-                    Future.delayed(Duration(seconds: 5), () {
-                      // Code to execute after the delay
-                      setState(() {
-                        isButtonPressed = false;
-                      });
-                      print("Delayed execution after 5 seconds");
-                    });
-                  },
+            onPressed: () {
+              setState(() {
+                rasterizeValue++;
+              });
+            },
             child: const Icon(Icons.add),
           ),
         ],
@@ -94,23 +82,28 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(
                   height: 10,
                 ),
-                Container(
-                  height: 200,
-                  width: 200,
-                  decoration: DottedDecoration(
-                      shape: Shape.box,
-                      dash: const [10, 10],
-                      borderRadius: BorderRadius.circular(10)),
-                  child: const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          CupertinoIcons.add_circled,
-                          size: 50,
-                        ),
-                        Text("Pick An Image")
-                      ],
+                GestureDetector(
+                  onTap: () {
+                    print("Pick An Image");
+                  },
+                  child: Container(
+                    height: 200,
+                    width: 200,
+                    decoration: DottedDecoration(
+                        shape: Shape.box,
+                        dash: const [10, 10],
+                        borderRadius: BorderRadius.circular(10)),
+                    child: const Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            CupertinoIcons.add_circled,
+                            size: 50,
+                          ),
+                          Text("Pick An Image")
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -169,7 +162,7 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () async {},
                   child: const Text(
                     "Download",
-                    style: TextStyle(color: Colors.black),
+                
                   ),
                 )
               ],
