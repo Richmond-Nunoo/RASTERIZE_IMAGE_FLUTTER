@@ -1,7 +1,8 @@
+import 'package:dotted_decoration/dotted_decoration.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image/image.dart' as imglib;
-import 'package:resterizeimage/views/physic.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,12 +12,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   final Color bgColor = Colors.grey.shade200;
-
   imglib.Image? image;
 
   double tileSize = 0;
+  double rasterizeValue = 15.0;
+  bool isButtonPressed = false;
 
   @override
   void initState() {
@@ -28,7 +29,7 @@ class _HomePageState extends State<HomePage> {
     final bytes = await rootBundle.load('assets/images/woman.jpg');
     final Uint8List imageBytes = bytes.buffer.asUint8List();
     final img = imglib.decodeImage(imageBytes);
-    final resizedImage = imglib.copyResize(img!, width: 300, height: 300);
+    final resizedImage = imglib.copyResize(img!, width: 220, height: 220);
 
     setState(() {
       image = resizedImage;
@@ -43,15 +44,38 @@ class _HomePageState extends State<HomePage> {
         children: [
           FloatingActionButton(
             heroTag: "1",
-            onPressed: () {},
+            onPressed: () {
+              if (rasterizeValue > 5) {
+                setState(() {
+                  rasterizeValue--;
+                });
+              } else {
+                print("You Cant go below 5");
+              }
+            },
             child: const Icon(Icons.remove),
           ),
           const SizedBox(
             width: 10,
           ),
           FloatingActionButton(
-                  heroTag: "2",
-            onPressed: () {},
+            heroTag: "2",
+            onPressed: isButtonPressed
+                ? null
+                : () {
+                    setState(() {
+                      isButtonPressed = true;
+                      rasterizeValue++;
+                    });
+
+                    Future.delayed(Duration(seconds: 5), () {
+                      // Code to execute after the delay
+                      setState(() {
+                        isButtonPressed = false;
+                      });
+                      print("Delayed execution after 5 seconds");
+                    });
+                  },
             child: const Icon(Icons.add),
           ),
         ],
@@ -60,58 +84,80 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text("Restaurize Image"),
         centerTitle: true,
+        elevation: 0,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 300,
-              width: 300,
-              child: LayoutBuilder(
-                builder: (BuildContext context, BoxConstraints constraints) {
-                  final width = constraints.maxWidth;
-                  final height = constraints.maxHeight;
-                  final ratio = height / width;
-                  const tilesX = 30;
-                  final tilesY = ratio * tilesX;
-                  tileSize = width / tilesY;
-                  return GestureDetector(
-                    onPanUpdate: (details) {
-                  
-                    },
-                    child: CustomPaint(
-                      painter: ImagePainter(
-                        fgColor: bgColor,
-                        tileSize: tileSize,
-                        image: image,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+      body: ListView(
+        children: [
+          Center(
+            child: Column(
               children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MyCustomWidget(),
-                      ),
-                    );
-                  },
-                  child: const Text(
-                    "Bounce",
-                    style: TextStyle(color: Colors.black),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  height: 210,
+                  width: 210,
+                  decoration: DottedDecoration(
+                      shape: Shape.box,
+                      dash: const [10, 10],
+                      borderRadius: BorderRadius.circular(10)),
+                  child: const Center(
+                    child: Icon(
+                      CupertinoIcons.add_circled,
+                      size: 50,
+                    ),
                   ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 1,
+                      width: 100,
+                      color: Colors.grey.shade300,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(4.0),
+                      child: Text("Ratarized Image"),
+                    ),
+                    Container(
+                      height: 1,
+                      width: 100,
+                      color: Colors.grey.shade300,
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  height: 220,
+                  width: 220,
+                  child: LayoutBuilder(
+                    builder:
+                        (BuildContext context, BoxConstraints constraints) {
+                      var width = constraints.maxWidth;
+                      var height = constraints.maxHeight;
+                      var ratio = height / width;
+                      var tilesX = rasterizeValue;
+                      var tilesY = ratio * tilesX;
+                      tileSize = width / tilesY;
+                      return CustomPaint(
+                        painter: ImagePainter(
+                          fgColor: bgColor,
+                          tileSize: tileSize,
+                          image: image,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
                 ),
                 ElevatedButton(
                   onPressed: () async {},
@@ -119,11 +165,11 @@ class _HomePageState extends State<HomePage> {
                     "Download",
                     style: TextStyle(color: Colors.black),
                   ),
-                ),
+                )
               ],
-            )
-          ],
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }

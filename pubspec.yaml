@@ -38,6 +38,8 @@ dependencies:
   image: ^4.0.17
   flutter_riverpod: ^2.3.6
   path_provider: ^2.0.15
+  dotted_decoration: ^2.0.0
+  image_picker: ^1.0.1
 
 dev_dependencies:
   flutter_test:
