@@ -95,16 +95,22 @@ class _HomePageState extends State<HomePage> {
                   height: 10,
                 ),
                 Container(
-                  height: 210,
-                  width: 210,
+                  height: 200,
+                  width: 200,
                   decoration: DottedDecoration(
                       shape: Shape.box,
                       dash: const [10, 10],
                       borderRadius: BorderRadius.circular(10)),
                   child: const Center(
-                    child: Icon(
-                      CupertinoIcons.add_circled,
-                      size: 50,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          CupertinoIcons.add_circled,
+                          size: 50,
+                        ),
+                        Text("Pick An Image")
+                      ],
                     ),
                   ),
                 ),
