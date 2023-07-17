@@ -39,8 +39,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   final Color bgColor = Colors.grey.shade300;
-
-  double tileSize = 0;
   double rasterizeValue = 1;
 
   ScreenshotController screenshotController = ScreenshotController();
@@ -131,6 +129,7 @@ class _HomePageState extends State<HomePage> {
             final image = await screenshotController
                 .captureFromWidget(rasterizedImageMethod());
             await saveImage(image);
+            UtilsSnack().showSnackBar("Image saved to your gallery ");
           },
           icon: const Icon(
             CupertinoIcons.cloud_download,
