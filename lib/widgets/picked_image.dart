@@ -7,7 +7,12 @@ import 'package:image_picker/image_picker.dart';
 class ImageWidget extends StatefulWidget {
   final File image;
   final ValueChanged<ImageSource> onClicked;
-  const ImageWidget({super.key, required this.image, required this.onClicked});
+  final VoidCallback onImageRemoved;
+  const ImageWidget(
+      {super.key,
+      required this.image,
+      required this.onClicked,
+      required this.onImageRemoved});
 
   @override
   State<ImageWidget> createState() => _ImageWidgetState();
@@ -88,18 +93,14 @@ class _ImageWidgetState extends State<ImageWidget> {
             bottom: -10,
             right: -10,
             child: InkWell(
-              onTap: () {
-                print("Remove the Image");
+              onTap: () async {
+                widget.onImageRemoved();
+                print("Remove the Images");
               },
               child: CircleAvatar(
                 backgroundColor: Colors.white.withOpacity(0.5),
-                child: IconButton(
-                  onPressed: () {
-                    print("Remove the Image");
-                  },
-                  icon: const Icon(
-                    CupertinoIcons.delete,
-                  ),
+                child: const Icon(
+                  CupertinoIcons.delete,
                 ),
               ),
             ),

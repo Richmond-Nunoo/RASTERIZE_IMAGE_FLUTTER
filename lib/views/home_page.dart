@@ -38,12 +38,7 @@ class _HomePageState extends State<HomePage> {
   final Color bgColor = Colors.grey.shade300;
 
   double tileSize = 0;
-  double rasterizeValue = 15.0;
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  double rasterizeValue = 1;
 
   ScreenshotController screenshotController = ScreenshotController();
   @override
@@ -68,6 +63,11 @@ class _HomePageState extends State<HomePage> {
                     ? ImageWidget(
                         onClicked: (ImageSource value) => pickImage(value),
                         image: pickedImage!,
+                        onImageRemoved: () {
+                          setState(() {
+                            pickedImage = null;
+                          });
+                        },
                       )
                     : GestureDetector(
                         onTap: () async {
