@@ -4,11 +4,13 @@ import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image/image.dart' as imglib;
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:resterizeimage/widgets/image_source.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import '../widgets/picked_image.dart';
@@ -71,7 +73,8 @@ class _HomePageState extends State<HomePage> {
                       )
                     : GestureDetector(
                         onTap: () async {
-                          final source = await showImageSource(context);
+                          final source =
+                              await ImageSourceHelper.showImageSource(context);
 
                           if (source == null) return;
                           pickImage(source);
@@ -185,7 +188,7 @@ class _HomePageState extends State<HomePage> {
         FloatingActionButton(
           heroTag: "1",
           onPressed: () {
-            if (rasterizeValue > 1) {
+            if (rasterizeValue > 1 && pickedImage != null) {
               setState(() {
                 rasterizeValue--;
               });
@@ -201,7 +204,7 @@ class _HomePageState extends State<HomePage> {
         FloatingActionButton(
           heroTag: "2",
           onPressed: () {
-            if (rasterizeValue < 35) {
+            if (rasterizeValue < 35 && pickedImage != null) {
               setState(() {
                 rasterizeValue++;
               });
@@ -215,75 +218,35 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Container rasterizedImageMethod() {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.blue,
-      ),
-      child: SizedBox(
-        height: 220,
-        width: 220,
-        child: pickedImage != null
-            ? ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: CustomPaint(
-                  painter: ImagePainter(
-                    fgColor: bgColor,
-                    tileSize: rasterizeValue,
-                    image: pickedImage,
-                  ),
+  SizedBox rasterizedImageMethod() {
+    return SizedBox(
+      height: 220,
+      width: 220,
+      child: pickedImage != null
+          ? ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: CustomPaint(
+                painter: ImagePainter(
+                  fgColor: bgColor,
+                  tileSize: rasterizeValue,
+                  image: pickedImage,
                 ),
-              )
-            : const Center(
-                child: Text("Error"),
               ),
-      ),
-    );
-  }
-
-  Future<ImageSource?> showImageSource(BuildContext context) async {
-    if (Platform.isIOS) {
-      return showCupertinoModalPopup<ImageSource>(
-        context: context,
-        builder: (context) => CupertinoActionSheet(
-          actions: [
-            CupertinoActionSheetAction(
-              child: const Text("Camera"),
-              onPressed: () => Navigator.of(context).pop(ImageSource.camera),
-            ),
-            CupertinoActionSheetAction(
-              child: const Text("Gallery"),
-              onPressed: () => Navigator.of(context).pop(ImageSource.gallery),
             )
-          ],
-        ),
-      );
-    } else if (Platform.isAndroid) {
-      return showModalBottomSheet(
-        context: context,
-        builder: (context) => Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.camera_alt),
-                title: const Text("Camera"),
-                onTap: () => Navigator.of(context).pop(ImageSource.camera),
+          : Center(
+              child: Column(
+                children: [
+                  SvgPicture.asset(
+                    "assets/images/photo.svg",
+                    height: 200,
+                    width: 200,
+                    fit: BoxFit.fitWidth,
+                  ),
+                  const Text("Select An Image to Rasterize"),
+                ],
               ),
-              const Divider(),
-              ListTile(
-                leading: const Icon(Icons.image),
-                title: const Text("Gallery"),
-                onTap: () => Navigator.of(context).pop(ImageSource.gallery),
-              )
-            ],
-          ),
-        ),
-      );
-    }
-    return null;
+            ),
+    );
   }
 
   saveImage(Uint8List image) async {
