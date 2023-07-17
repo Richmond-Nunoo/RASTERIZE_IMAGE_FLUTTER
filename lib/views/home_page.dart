@@ -10,6 +10,7 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:resterizeimage/widgets/bottom_snackbar.dart';
 import 'package:resterizeimage/widgets/image_source.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
@@ -204,12 +205,14 @@ class _HomePageState extends State<HomePage> {
         FloatingActionButton(
           heroTag: "2",
           onPressed: () {
-            if (rasterizeValue < 35 && pickedImage != null) {
+            if (rasterizeValue < 35) {
               setState(() {
                 rasterizeValue++;
               });
+            } else if (pickedImage != null) {
+              UtilsSnack().showSnackBar("Invalid Image");
             } else {
-              print("Thats Enough");
+              UtilsSnack().showSnackBar("Rasterization Limited to this point");
             }
           },
           child: const Icon(Icons.add),
