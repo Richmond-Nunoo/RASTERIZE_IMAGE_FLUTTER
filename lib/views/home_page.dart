@@ -4,18 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:resterizeimage/widgets/bottom_snackbar.dart';
 import 'package:resterizeimage/widgets/image_painter.dart';
 import 'package:resterizeimage/widgets/image_source.dart';
 import 'package:resterizeimage/widgets/row_divider.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:share_plus/share_plus.dart';
 import '../widgets/picked_image.dart';
-import 'package:path/path.dart' as base;
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
