@@ -28,8 +28,6 @@ class _HomePageState extends State<HomePage> {
     try {
       final XFile? pickedImage = await ImagePicker().pickImage(source: source);
       if (pickedImage == null) return;
-
-      //  final imageTemp = File(pickedImage.path);
       final imagePermanent = await saveImagePermanently(pickedImage.path);
       setState(() => this.pickedImage = imagePermanent);
     } on PlatformException catch (e) {
@@ -289,7 +287,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   saveImage(Uint8List image) async {
-    await [Permission.storage].request();
+    await [
+      Permission.storage,
+    ].request();
 
     final time = DateTime.now()
         .toIso8601String()

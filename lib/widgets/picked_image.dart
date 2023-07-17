@@ -74,6 +74,7 @@ class _ImageWidgetState extends State<ImageWidget> {
       },
       child: Stack(
         clipBehavior: Clip.none,
+        fit: StackFit.loose,
         children: [
           Container(
             height: 150,
