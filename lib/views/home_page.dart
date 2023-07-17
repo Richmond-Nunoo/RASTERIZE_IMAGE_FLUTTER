@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
       final XFile? pickedImage = await ImagePicker().pickImage(source: source);
       if (pickedImage == null) return;
       final imagePermanent =
-          await saveImagePermanently(pickedImage.path);
+          await imagePickerHelper.saveImagePermanently(pickedImage.path);
       setState(() => this.pickedImage = imagePermanent);
     } on PlatformException catch (e) {
       print("Failed to Pick an Image $e");
@@ -130,7 +130,7 @@ class _HomePageState extends State<HomePage> {
           onPressed: () async {
             final image = await screenshotController
                 .captureFromWidget(rasterizedImageMethod());
-            await saveImage(image);
+            await imagePickerHelper.saveImage(image);
             UtilsSnack().showSnackBar("Image saved to your gallery ");
           },
           icon: const Icon(
@@ -147,7 +147,7 @@ class _HomePageState extends State<HomePage> {
           onPressed: () async {
             final image = await screenshotController
                 .captureFromWidget(rasterizedImageMethod());
-            saveAndShare(image);
+            imagePickerHelper.saveAndShare(image);
           },
           label: const Text(
             "share",
@@ -236,37 +236,5 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
     );
-  }
-
-  saveImage(Uint8List image) async {
-    await [
-      Permission.storage,
-    ].request();
-
-    final time = DateTime.now()
-        .toIso8601String()
-        .replaceAll('.', '_')
-        .replaceAll('.', "_");
-    final String name = "Sreenshot_$time";
-    final results = await ImageGallerySaver.saveImage(image, name: name);
-    return results["filePath"];
-  }
-}
-
-Future<File> saveImagePermanently(String path) async {
-  final directory = await getApplicationDocumentsDirectory();
-  final name = base.basename(path);
-  final image = File('${directory.path}/$name');
-  return File(path).copy(image.path);
-}
-
-void saveAndShare(Uint8List bytes) async {
-  try {
-    final directory = await getApplicationDocumentsDirectory();
-    final image = File("${directory.path}/screenshot.jpg");
-    await image.writeAsBytes(bytes);
-    await Share.shareXFiles([XFile(image.path)]);
-  } catch (e) {
-    print(e.toString());
   }
 }
