@@ -1,9 +1,13 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
+// import 'package:path/path.dart' as base;
 import 'package:image_picker/image_picker.dart';
+//import 'package:path_provider/path_provider.dart';
 
 class ImageSourceHelper {
+  // pick an image platform specific
   static Future<ImageSource?> showImageSource(BuildContext context) async {
     if (Platform.isIOS) {
       return showCupertinoModalPopup<ImageSource>(
@@ -47,4 +51,30 @@ class ImageSourceHelper {
     }
     return null;
   }
+
+  // File? _pickedImage;
+
+  // File? get userpickImage => _pickedImage;
+
+  // set pickedImage(File? image) {
+  //   _pickedImage = image;
+  // }
+
+  // Future<void> pickImage(ImageSource source) async {
+  //   try {
+  //     final XFile? pickedImage = await ImagePicker().pickImage(source: source);
+  //     if (pickedImage == null) return;
+  //     final imagePermanent = await saveImagePermanently(pickedImage.path);
+  //     _pickedImage = imagePermanent;
+  //   } on PlatformException catch (e) {
+  //     print("Failed to Pick an Image $e");
+  //   }
+  // }
+
+  // Future<File> saveImagePermanently(String path) async {
+  //   final directory = await getApplicationDocumentsDirectory();
+  //   final name = base.basename(path);
+  //   final image = File('${directory.path}/$name');
+  //   return File(path).copy(image.path);
+  // }
 }

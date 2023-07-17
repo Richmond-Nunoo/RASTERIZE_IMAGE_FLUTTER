@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -39,8 +38,8 @@ class _ImageWidgetState extends State<ImageWidget> {
         fit: StackFit.loose,
         children: [
           Container(
-            height: 150,
-            width: 150,
+            height: 170,
+            width: 180,
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(10)),
               image: DecorationImage(image: image, fit: BoxFit.cover),

@@ -1,17 +1,17 @@
 import 'dart:io';
-
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:image/image.dart' as imglib;
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:resterizeimage/widgets/bottom_snackbar.dart';
+import 'package:resterizeimage/widgets/image_painter.dart';
 import 'package:resterizeimage/widgets/image_source.dart';
+import 'package:resterizeimage/widgets/row_divider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import '../widgets/picked_image.dart';
@@ -26,19 +26,21 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   File? pickedImage;
+  ImageSourceHelper imagePickerHelper = ImageSourceHelper();
 
   Future pickImage(ImageSource source) async {
     try {
       final XFile? pickedImage = await ImagePicker().pickImage(source: source);
       if (pickedImage == null) return;
-      final imagePermanent = await saveImagePermanently(pickedImage.path);
+      final imagePermanent =
+          await saveImagePermanently(pickedImage.path);
       setState(() => this.pickedImage = imagePermanent);
     } on PlatformException catch (e) {
       print("Failed to Pick an Image $e");
     }
   }
 
-  final Color bgColor = Colors.grey.shade300;
+  final Color bgColor = Colors.grey.shade100;
   double rasterizeValue = 1;
 
   ScreenshotController screenshotController = ScreenshotController();
@@ -48,7 +50,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: actionButtons(),
       backgroundColor: bgColor,
       appBar: AppBar(
-        title: const Text("Restaurize Image"),
+        title: const Text("Rasterize Image"),
         centerTitle: true,
         elevation: 0,
       ),
@@ -153,29 +155,6 @@ class _HomePageState extends State<HomePage> {
           icon: const Icon(
             CupertinoIcons.share,
           ),
-        ),
-      ],
-    );
-  }
-
-  Row rowDivider() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          height: 1,
-          width: 100,
-          color: Colors.grey.shade300,
-        ),
-        const Padding(
-          padding: EdgeInsets.all(4.0),
-          child: Text("Ratarized Image"),
-        ),
-        Container(
-          height: 1,
-          width: 100,
-          color: Colors.grey.shade300,
         ),
       ],
     );
@@ -290,63 +269,4 @@ void saveAndShare(Uint8List bytes) async {
   } catch (e) {
     print(e.toString());
   }
-}
-
-class ImagePainter extends CustomPainter {
-  final Color fgColor;
-  final double tileSize;
-  final File? image;
-
-  ImagePainter({
-    required this.fgColor,
-    required this.tileSize,
-    required this.image,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    if (image == null) return;
-
-    final bytes = image!.readAsBytesSync();
-    final img = imglib.decodeImage(bytes);
-
-    if (img == null) return;
-
-    final paint = Paint()..color = fgColor;
-
-    //final aspectRatio = img.width / img.height;
-    const targetWidth = 220.0;
-    const targetHeight = 220.0;
-
-    final resizedImage = imglib.copyResize(
-      img,
-      width: targetWidth.toInt(),
-      height: targetHeight.toInt(),
-    );
-
-    for (var y = 0; y < resizedImage.height; y += tileSize.toInt()) {
-      for (var x = 0; x < resizedImage.width; x += tileSize.toInt()) {
-        final c = resizedImage.getPixelSafe(x, y);
-        final alpha = c.a / 255.0;
-        final r = (c.r * alpha).toInt();
-        final g = (c.g * alpha).toInt();
-        final b = (c.b * alpha).toInt();
-
-        final color = Color.fromARGB(255, r, g, b);
-
-        final factor = alpha < 0.5 ? 2.0 : 1.0;
-
-        final blendedColor =
-            Color.alphaBlend(color.withOpacity(alpha * factor), fgColor);
-
-        paint.color = blendedColor.withOpacity(alpha);
-        final rect =
-            Rect.fromLTWH(x.toDouble(), y.toDouble(), tileSize, tileSize);
-        canvas.drawRect(rect, paint);
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
