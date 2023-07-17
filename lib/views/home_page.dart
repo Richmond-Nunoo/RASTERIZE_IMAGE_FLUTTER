@@ -11,7 +11,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
-import '../widgets/pick_image.dart';
+import '../widgets/picked_image.dart';
+import 'package:path/path.dart' as base;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -28,14 +29,15 @@ class _HomePageState extends State<HomePage> {
       final XFile? pickedImage = await ImagePicker().pickImage(source: source);
       if (pickedImage == null) return;
 
-      final imageTemp = File(pickedImage.path);
-      setState(() => this.pickedImage = imageTemp);
+      //  final imageTemp = File(pickedImage.path);
+      final imagePermanent = await saveImagePermanently(pickedImage.path);
+      setState(() => this.pickedImage = imagePermanent);
     } on PlatformException catch (e) {
       print("Failed to Pick an Image $e");
     }
   }
 
-  final Color bgColor = Colors.grey.shade200;
+  final Color bgColor = Colors.grey.shade300;
 
   double tileSize = 0;
   double rasterizeValue = 15.0;
@@ -297,6 +299,13 @@ class _HomePageState extends State<HomePage> {
     final results = await ImageGallerySaver.saveImage(image, name: name);
     return results["filePath"];
   }
+}
+
+Future<File> saveImagePermanently(String path) async {
+  final directory = await getApplicationDocumentsDirectory();
+  final name = base.basename(path);
+  final image = File('${directory.path}/$name');
+  return File(path).copy(image.path);
 }
 
 void saveAndShare(Uint8List bytes) async {

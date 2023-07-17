@@ -72,13 +72,38 @@ class _ImageWidgetState extends State<ImageWidget> {
         if (source == null) return;
         widget.onClicked(source);
       },
-      child: Container(
-        height: 150,
-        width: 150,
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          image: DecorationImage(image: image, fit: BoxFit.cover),
-        ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            height: 150,
+            width: 150,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+              image: DecorationImage(image: image, fit: BoxFit.cover),
+            ),
+          ),
+          Positioned(
+            bottom: -10,
+            right: -10,
+            child: InkWell(
+              onTap: () {
+                print("Remove the Image");
+              },
+              child: CircleAvatar(
+                backgroundColor: Colors.white.withOpacity(0.5),
+                child: IconButton(
+                  onPressed: () {
+                    print("Remove the Image");
+                  },
+                  icon: const Icon(
+                    CupertinoIcons.delete,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
