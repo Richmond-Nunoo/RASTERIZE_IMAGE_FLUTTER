@@ -189,12 +189,17 @@ class _HomePageState extends State<HomePage> {
         FloatingActionButton(
           heroTag: "1",
           onPressed: () {
-            if (rasterizeValue > 1 && pickedImage != null) {
-              setState(() {
-                rasterizeValue--;
-              });
+            if (pickedImage != null) {
+              if (rasterizeValue > 1) {
+                setState(() {
+                  rasterizeValue--;
+                });
+              } else {
+                UtilsSnack()
+                    .showSnackBar("Rasterization Limited to this point");
+              }
             } else {
-              print("You Cant go below 1");
+              UtilsSnack().showSnackBar("Invalid Image");
             }
           },
           child: const Icon(Icons.remove),
@@ -205,14 +210,17 @@ class _HomePageState extends State<HomePage> {
         FloatingActionButton(
           heroTag: "2",
           onPressed: () {
-            if (rasterizeValue < 35) {
-              setState(() {
-                rasterizeValue++;
-              });
-            } else if (pickedImage != null) {
-              UtilsSnack().showSnackBar("Invalid Image");
+            if (pickedImage != null) {
+              if (rasterizeValue < 35) {
+                setState(() {
+                  rasterizeValue++;
+                });
+              } else {
+                UtilsSnack()
+                    .showSnackBar("Rasterization Limited to this point");
+              }
             } else {
-              UtilsSnack().showSnackBar("Rasterization Limited to this point");
+              UtilsSnack().showSnackBar("Invalid Image");
             }
           },
           child: const Icon(Icons.add),

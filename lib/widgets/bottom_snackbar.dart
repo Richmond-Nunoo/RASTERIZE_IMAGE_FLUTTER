@@ -7,7 +7,7 @@ class UtilsSnack {
     final snackBar = SnackBar(
       content: Text(
         text,
-        textAlign: TextAlign.center,
+        style: const TextStyle(color: Colors.black),
       ),
       backgroundColor: Colors.white,
     );
