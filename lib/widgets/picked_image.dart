@@ -8,11 +8,12 @@ class ImageWidget extends StatefulWidget {
   final File image;
   final ValueChanged<ImageSource> onClicked;
   final VoidCallback onImageRemoved;
-  const ImageWidget(
-      {super.key,
-      required this.image,
-      required this.onClicked,
-      required this.onImageRemoved});
+  const ImageWidget({
+    super.key,
+    required this.image,
+    required this.onClicked,
+    required this.onImageRemoved,
+  });
 
   @override
   State<ImageWidget> createState() => _ImageWidgetState();

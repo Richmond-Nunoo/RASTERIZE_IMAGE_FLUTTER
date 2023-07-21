@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:resterizeimage/widgets/bottom_snackbar.dart';
@@ -11,7 +10,6 @@ import 'package:resterizeimage/widgets/image_source.dart';
 import 'package:resterizeimage/widgets/row_divider.dart';
 import 'package:screenshot/screenshot.dart';
 import '../widgets/picked_image.dart';
-
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,18 +21,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   File? pickedImage;
   ImageSourceHelper imagePickerHelper = ImageSourceHelper();
-
-  Future pickImage(ImageSource source) async {
-    try {
-      final XFile? pickedImage = await ImagePicker().pickImage(source: source);
-      if (pickedImage == null) return;
-      final imagePermanent =
-          await imagePickerHelper.saveImagePermanently(pickedImage.path);
-      setState(() => this.pickedImage = imagePermanent);
-    } on PlatformException catch (e) {
-      print("Failed to Pick an Image $e");
-    }
-  }
 
   final Color bgColor = Colors.grey.shade100;
   double rasterizeValue = 1;
@@ -60,7 +46,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 pickedImage != null
                     ? ImageWidget(
-                        onClicked: (ImageSource value) => pickImage(value),
+                        onClicked: (ImageSource value) => _pickImage(value),
                         image: pickedImage!,
                         onImageRemoved: () {
                           setState(() {
@@ -74,7 +60,7 @@ class _HomePageState extends State<HomePage> {
                               await ImageSourceHelper.showImageSource(context);
 
                           if (source == null) return;
-                          pickImage(source);
+                          _pickImage(source);
                         },
                         child: Container(
                           height: 150,
@@ -232,5 +218,14 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
     );
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final image = await ImageSourceHelper.pickImage(source);
+    if (image != null) {
+      setState(() {
+        pickedImage = image;
+      });
+    }
   }
 }

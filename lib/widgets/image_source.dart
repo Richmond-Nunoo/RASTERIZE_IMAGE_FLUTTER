@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path/path.dart' as base;
 import 'package:image_picker/image_picker.dart';
@@ -56,12 +56,13 @@ class ImageSourceHelper {
     return null;
   }
 
-  Future<File> saveImagePermanently(String path) async {
+  static Future<File> saveImagePermanently(String path) async {
     final directory = await getApplicationDocumentsDirectory();
     final name = base.basename(path);
     final image = File('${directory.path}/$name');
     return File(path).copy(image.path);
   }
+
 
   void saveAndShare(Uint8List bytes) async {
     try {
@@ -73,6 +74,7 @@ class ImageSourceHelper {
       print(e.toString());
     }
   }
+
 
   saveImage(Uint8List image) async {
     await [
@@ -87,29 +89,19 @@ class ImageSourceHelper {
     final results = await ImageGallerySaver.saveImage(image, name: name);
     return results["filePath"];
   }
-  // File? _pickedImage;
 
-  // File? get userpickImage => _pickedImage;
 
-  // set pickedImage(File? image) {
-  //   _pickedImage = image;
-  // }
-
-  // Future<void> pickImage(ImageSource source) async {
-  //   try {
-  //     final XFile? pickedImage = await ImagePicker().pickImage(source: source);
-  //     if (pickedImage == null) return;
-  //     final imagePermanent = await saveImagePermanently(pickedImage.path);
-  //     _pickedImage = imagePermanent;
-  //   } on PlatformException catch (e) {
-  //     print("Failed to Pick an Image $e");
-  //   }
-  // }
-
-  // Future<File> saveImagePermanently(String path) async {
-  //   final directory = await getApplicationDocumentsDirectory();
-  //   final name = base.basename(path);
-  //   final image = File('${directory.path}/$name');
-  //   return File(path).copy(image.path);
-  // }
+  static Future<File?> pickImage(ImageSource source) async {
+    try {
+      final XFile? pickedImage = await ImagePicker().pickImage(source: source);
+      if (pickedImage == null) return null;
+      final imagePermanent = await saveImagePermanently(pickedImage.path);
+      return imagePermanent;
+    } on PlatformException catch (e) {
+      print("Failed to Pick an Image $e");
+      return null;
+    }
+  }
+  
 }
+
