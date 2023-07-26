@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 const SizedBox(
-                  height: 30,
+                  height: 10,
                 ),
                 pickedImage != null
                     ? ImageWidget(
@@ -63,21 +63,24 @@ class _HomePageState extends State<HomePage> {
                           _pickImage(source);
                         },
                         child: Container(
-                          height: 150,
-                          width: 150,
+                          height: MediaQuery.of(context).size.height * 0.20,
+                          width: MediaQuery.of(context).size.width * 0.45,
                           decoration: DottedDecoration(
                               shape: Shape.box,
                               dash: const [10, 10],
                               borderRadius: BorderRadius.circular(10)),
-                          child: const Center(
+                          child: Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
+                                const Icon(
                                   CupertinoIcons.add_circled,
-                                  size: 50,
+                                  size: 40,
                                 ),
-                                Text("Pick An Image")
+                                Text(
+                                  "Pick An Image",
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                )
                               ],
                             ),
                           ),
@@ -92,7 +95,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 rasterizedImageMethod(),
                 const SizedBox(
-                  height: 20,
+                  height: 5,
                 ),
                 shareButtons()
               ],
@@ -209,11 +212,11 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   SvgPicture.asset(
                     "assets/images/photo.svg",
-                    height: 200,
-                    width: 200,
+                    height: MediaQuery.of(context).size.height * 0.29,
+                    width: MediaQuery.of(context).size.width * 0.45,
                     fit: BoxFit.fitWidth,
                   ),
-                  const Text("Select An Image to Rasterize"),
+                  const Text("No Image "),
                 ],
               ),
             ),

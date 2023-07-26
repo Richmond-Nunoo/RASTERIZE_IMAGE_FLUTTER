@@ -39,8 +39,8 @@ class _ImageWidgetState extends State<ImageWidget> {
         fit: StackFit.loose,
         children: [
           Container(
-            height: 170,
-            width: 180,
+            height: MediaQuery.of(context).size.height * 0.28,
+            width: MediaQuery.of(context).size.width * 0.50,
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(10)),
               image: DecorationImage(image: image, fit: BoxFit.cover),
