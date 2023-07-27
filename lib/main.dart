@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
           seedColor: Colors.deepPurple,
         ),
       ),
-      home: const HomePage(),
+      home: const HomePage()
     );
   }
 }
