@@ -15,9 +15,13 @@ class MyApp extends StatelessWidget {
       scaffoldMessengerKey: UtilsSnack.messengerKey,
       title: 'Rasterize Image',
       debugShowCheckedModeBanner: false,
+      themeMode: ThemeMode.system,
+      darkTheme: ThemeData.dark(),
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple,),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepPurple,
+        ),
       ),
       home: const HomePage(),
     );
