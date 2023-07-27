@@ -25,7 +25,7 @@ class ImagePainter extends CustomPainter {
     final paint = Paint()..color = fgColor;
 
     const targetWidth = 220.0;
-    const targetHeight = 220.0;
+    const targetHeight = 243.0;
 
     final resizedImage = imglib.copyResize(
       img,

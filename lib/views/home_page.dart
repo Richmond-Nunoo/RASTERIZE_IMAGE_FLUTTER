@@ -194,7 +194,7 @@ class _HomePageState extends State<HomePage> {
 
   SizedBox rasterizedImageMethod() {
     return SizedBox(
-      height: 220,
+      height: 243,
       width: 220,
       child: pickedImage != null
           ? ClipRRect(
@@ -209,10 +209,12 @@ class _HomePageState extends State<HomePage> {
             )
           : Center(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SvgPicture.asset(
                     "assets/images/photo.svg",
-                    height: MediaQuery.of(context).size.height * 0.29,
+                    height: MediaQuery.of(context).size.height * 0.30,
                     width: MediaQuery.of(context).size.width * 0.45,
                     fit: BoxFit.fitWidth,
                   ),
