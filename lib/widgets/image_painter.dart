@@ -23,6 +23,8 @@ class ImagePainter extends CustomPainter {
     if (img == null) return;
 
     final paint = Paint()..color = fgColor;
+    // Enable anti-aliasing for smoother rendering
+    paint.isAntiAlias = true;
 
     const targetWidth = 220.0;
     const targetHeight = 243.0;
@@ -59,3 +61,5 @@ class ImagePainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
+
+

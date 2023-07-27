@@ -24,6 +24,7 @@ class _HomePageState extends State<HomePage> {
 
   final Color bgColor = Colors.grey.shade100;
   double rasterizeValue = 1;
+  bool isLoadingImage = false;
 
   ScreenshotController screenshotController = ScreenshotController();
   @override
@@ -35,71 +36,82 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         elevation: 0,
       ),
-      body: ListView(
+      body: Stack(
         children: [
-          Center(
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                pickedImage != null
-                    ? ImageWidget(
-                        onClicked: (ImageSource value) => _pickImage(value),
-                        image: pickedImage!,
-                        onImageRemoved: () {
-                          setState(() {
-                            pickedImage = null;
-                          });
-                        },
-                      )
-                    : GestureDetector(
-                        onTap: () async {
-                          final source =
-                              await ImageSourceHelper.showImageSource(context);
+          ListView(
+            children: [
+              Column(
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  pickedImage != null
+                      ? ImageWidget(
+                          onClicked: (ImageSource value) => _pickImage(value),
+                          image: pickedImage!,
+                          onImageRemoved: () {
+                            setState(() {
+                              pickedImage = null;
+                            });
+                          },
+                        )
+                      : GestureDetector(
+                          onTap: () async {
+                            final source =
+                                await ImageSourceHelper.showImageSource(
+                                    context);
 
-                          if (source == null) return;
-                          _pickImage(source);
-                        },
-                        child: Container(
-                          height: MediaQuery.of(context).size.height * 0.20,
-                          width: MediaQuery.of(context).size.width * 0.45,
-                          decoration: DottedDecoration(
-                              shape: Shape.box,
-                              dash: const [10, 10],
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  CupertinoIcons.add_circled,
-                                  size: 40,
-                                ),
-                                Text(
-                                  "Pick An Image",
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                )
-                              ],
+                            if (source == null) return;
+                            _pickImage(source);
+                          },
+                          child: Container(
+                            height: MediaQuery.of(context).size.height * 0.20,
+                            width: MediaQuery.of(context).size.width * 0.45,
+                            decoration: DottedDecoration(
+                                shape: Shape.box,
+                                dash: const [10, 10],
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    CupertinoIcons.add_circled,
+                                    size: 40,
+                                  ),
+                                  Text(
+                                    "Pick An Image",
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                const SizedBox(
-                  height: 10,
-                ),
-                rowDivider(),
-                const SizedBox(
-                  height: 10,
-                ),
-                rasterizedImageMethod(),
-                const SizedBox(
-                  height: 5,
-                ),
-                shareButtons()
-              ],
-            ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  rowDivider(),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  rasterizedImageMethod(),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  shareButtons()
+                ],
+              )
+            ],
           ),
+          if (isLoadingImage)
+            const Positioned.fill(
+              child: Align(
+                alignment: Alignment.center,
+                child: CircularProgressIndicator.adaptive(),
+              ),
+            ),
         ],
       ),
     );
@@ -225,7 +237,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _pickImage(ImageSource source) async {
+    setState(() {
+      isLoadingImage = true;
+    });
+
     final image = await ImageSourceHelper.pickImage(source);
+    setState(() {
+      isLoadingImage = false;
+    });
+
     if (image != null) {
       setState(() {
         pickedImage = image;
