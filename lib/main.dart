@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:resterizeimage/views/home_page.dart';
+import 'package:resterizeimage/views/home_screen.dart';
 import 'package:resterizeimage/widgets/bottom_snackbar.dart';
 
 void main() {
