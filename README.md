@@ -2,7 +2,12 @@
 
  This project aims to showcase the rasterization of an image using Flutter's custom painting capabilities,and provide provide a visually appealing representation of an image as a grid of colored rectangles
 
-
+## SCREENSHOTS
+<p style="float: center;">
+  <img src="https://github.com/Richmond-Nunoo/RASTERIZE_IMAGE_FLUTTER/blob/main/Screenshot_20230727_080706.gif" width="20%"/>
+  <img src="https://github.com/Richmond-Nunoo/RASTERIZE_IMAGE_FLUTTER/blob/main/Screenshot_20230727_081224.png" width="20%"/>
+  <img src="https://github.com/Richmond-Nunoo/RASTERIZE_IMAGE_FLUTTER/blob/main/Screenshot_20230727_080705.png" width="20%"/>
+</p>
 
 ## To clone this project,
 open your terminal or cmd
