@@ -229,7 +229,9 @@ class _HomePageState extends State<HomePage> {
                     width: MediaQuery.of(context).size.width * 0.45,
                     fit: BoxFit.fitWidth,
                   ),
-                  const Text("No Image Selected"),
+                  const Text(
+                    "No Image Selected",
+                  ),
                 ],
               ),
             ),
