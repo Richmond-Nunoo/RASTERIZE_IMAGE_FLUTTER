@@ -52,7 +52,7 @@ class _ImageWidgetState extends State<ImageWidget> {
             child: InkWell(
               onTap: () async {
                 widget.onImageRemoved();
-                print("Remove the Images");
+                print("Removed Images");
               },
               child: CircleAvatar(
                 backgroundColor: Colors.white.withOpacity(0.5),
